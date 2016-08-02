@@ -1,0 +1,157 @@
+#!/bin/bash
+due_limit=120 
+## Maximum allowed days of file storage in computer cluster
+
+WORK=/work/
+cd $WORK
+USER_LIST=$(ls)
+echo 'User list in work directory:'
+echo $USER_LIST 
+echo '------------------------------------------------'
+
+for user_dirc in $USER_LIST
+      do
+            echo $WORK$user_dirc 
+            cd $WORK$user_dirc
+            if [  -f "PURGE_NOTICE" ]
+            then
+                  rm PURGE_NOTICE
+            fi
+            user_file=$(ls)
+            echo 'user files:' 
+            echo $user_file 
+            echo '------------------------------------'
+            for file in $user_file
+                  do
+                        sec_end=$(date +%s)
+                        sec_start=$(date +%s -r $file)
+                        sec=$(($sec_end - $sec_start))
+                        day=$(($sec / 86400))
+                        echo $file
+                        echo 'period = ' $sec 'secs'
+                        echo 'period = ' $day 'days'
+                        echo '------------------------'
+                        is_due_20=$(echo "$day > $(($due_limit - 20))" | bc)
+                        is_due_10=$(echo "$day > $(($due_limit - 10))" | bc)
+                        is_due_1w=$(echo "$day > $(($due_limit - 7))" | bc)
+                        is_due_1d=$(echo "$day > $(($due_limit - 1))" | bc)
+                        is_due=$(echo "$day > $due_limit" | bc)
+                        is_due_test=$(echo "$sec > $due_limit" | bc)
+####                        if [ $is_due_test = '1' ] && [ $is_due_20 = '0' ] && \
+####                              [ $is_due_10 = '0' ]
+####                        then
+####                              if [ ! -f "PURGE_NOTICE" ]
+####                              then
+####                                    echo $file "will be purged in 20 days from" > PURGE_NOTICE
+####                                    echo $(date) >> PURGE_NOTICE
+####                                    echo "Please move the files to your home" \
+####                                    "directory ASAP" >>PURGE_NOTICE
+####                                    echo "------------------------------" >>PURGE_NOTICE
+####                              else
+####                                    echo $file "will be purged in 20 days from" >> PURGE_NOTICE
+####                                    echo $(date) >> PURGE_NOTICE
+####                                    echo "Please move the files to your home" \
+####                                    "directory ASAP">>PURGE_NOTICE
+####                                    echo "------------------------------" >>PURGE_NOTICE
+####                              fi
+####                        fi
+                        if [ $is_due_20 = '1' ] && [ $is_due_10 = '0' ] && \
+                              [ $is_due_1w = '0' ] && [ $is_due_1d = 0 ] && \
+                              [ $is_due = '0']
+                        then
+                              if [ ! -f "PURGE_NOTICE" ]
+                              then
+                                    echo $file "will be purged in 20 days from" 
+                                    echo $file "will be purged in 20 days from" > PURGE_NOTICE
+                                    echo $(date) >> PURGE_NOTICE
+                                    echo "Please move the files to your home" \
+                                    "directory ASAP" >>PURGE_NOTICE
+                                    echo "------------------------------" >>PURGE_NOTICE
+                              else
+                                    echo $file "will be purged in 20 days from" 
+                                    echo $file "will be purged in 20 days from" >> PURGE_NOTICE
+                                    echo $(date) >> PURGE_NOTICE
+                                    echo "Please move the files to your home" \
+                                    "directory ASAP">>PURGE_NOTICE
+                                    echo "------------------------------" >>PURGE_NOTICE
+                              fi
+                        fi
+                        if [ $is_due_10 = '1' ] && [ $is_due_1w = '0' ] && \
+                              [ $is_due_1d = '0' ] && [ $is_due = '0' ]
+                        then
+                              if [ ! -f "PURGE_NOTICE" ]
+                              then
+                                    echo $file "will be purged in 10 days from" 
+                                    echo $file "will be purged in 10 days from" > PURGE_NOTICE
+                                    echo $(date) >> PURGE_NOTICE
+                                    echo "Please move the files to your home" \
+                                    "directory ASAP" >>PURGE_NOTICE
+                                    echo "------------------------------" >>PURGE_NOTICE
+                              else
+                                    echo $file "will be purged in 10 days from" 
+                                    echo $file "will be purged in 10 days from" >> PURGE_NOTICE
+                                    echo $(date) >> PURGE_NOTICE
+                                    echo "Please move the files to your home" \
+                                    "directory ASAP">>PURGE_NOTICE
+                                    echo "------------------------------" >>PURGE_NOTICE
+                              fi
+                        fi
+                        if [ $is_due_1w = '1' ] && [ $is_due_1d = '0' ] && \
+                              [ $is_due = '0' ]
+                        then
+                              if [ ! -f "PURGE_NOTICE" ]
+                              then
+                                    echo $file "will be purged in 1 week from" 
+                                    echo $file "will be purged in 1 week from" > PURGE_NOTICE
+                                    echo $(date) >> PURGE_NOTICE
+                                    echo "Please move the files to your home" \
+                                    "directory NOW" >>PURGE_NOTICE
+                                    echo "------------------------------" >>PURGE_NOTICE
+                              else
+                                    echo $file "will be purged in 1 week from" 
+                                    echo $file "will be purged in 1 week from" >> PURGE_NOTICE
+                                    echo $(date) >> PURGE_NOTICE
+                                    echo "Please move the files to your home" \
+                                    "directory NOW">>PURGE_NOTICE
+                                    echo "------------------------------" >>PURGE_NOTICE
+                              fi
+                        fi
+                        if [ $is_due_1d = '1' ] && [ $is_due = '0' ]
+                        then
+                              if [ ! -f "PURGE_NOTICE" ]
+                              then
+                                    echo $file "will be purged in 1 day from" 
+                                    echo $file "will be purged in 1 day from" > PURGE_NOTICE
+                                    echo $(date) >> PURGE_NOTICE
+                                    echo "Please move the files to your home" \
+                                    "directory NOW" >>PURGE_NOTICE
+                                    echo "------------------------------" >>PURGE_NOTICE
+                              else
+                                    echo $file "will be purged in 1 day from" 
+                                    echo $file "will be purged in 1 day from" >> PURGE_NOTICE
+                                    echo $(date) >> PURGE_NOTICE
+                                    echo "Please move the files to your home" \
+                                    "directory NOW">>PURGE_NOTICE
+                                    echo "------------------------------" >>PURGE_NOTICE
+                              fi
+                        fi
+                        if [ $is_due = '1' ]
+                        then
+#### Do NOT uncomment next line unless you want to clean the work directory
+                              rm -rf $file
+                              if [ ! -f "PURGE_NOTICE" ]
+                              then
+                                    echo $file "was purged by Wil!!! Sorry!" 
+                                    echo $file "was purged on" > PURGE_NOTICE
+                                    echo $(date) >> PURGE_NOTICE
+                                    echo "------------------------------" >>PURGE_NOTICE
+                              else
+                                    echo $file "was purged by Wil!!! Sorry!" 
+                                    echo $file "was purged on" >> PURGE_NOTICE
+                                    echo $(date) >> PURGE_NOTICE
+                                    echo "------------------------------" >>PURGE_NOTICE
+                              fi
+                        fi
+                  done
+      done
+            
